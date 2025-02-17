@@ -1,0 +1,6 @@
+@halak_HostAddress = http://localhost:5032
+
+GET {{halak_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
