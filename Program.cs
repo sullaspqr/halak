@@ -5,7 +5,11 @@ using Microsoft.Extensions.Hosting;
 using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = "Server=localhost;Database=halak;User=root;Password=;";
+
+// Betöltjük az appsettings.Production.json-t (Render automatikusan a "Production" környezetben fut)
+builder.Configuration.AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<HalakDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
