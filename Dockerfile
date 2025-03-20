@@ -1,25 +1,18 @@
-# Használt .NET verzió
-ARG DOTNET_VERSION=9.0
-ARG BUILD_CONFIGURATION=Release
-
-# Build környezet létrehozása
-FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION AS build
-
-# Munkakönyvtár beállítása és fájlok másolása
-WORKDIR /src
-COPY ["halak.sln", "."]
-COPY ["halak/", "halak/"]
-
-# Restore, build és publish lépések
-WORKDIR /src/halak
-RUN dotnet restore
-RUN dotnet build -c $BUILD_CONFIGURATION -o /app/build
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish -r linux-musl-x64
-
-# Futási környezet létrehozása
-FROM mcr.microsoft.com/dotnet/aspnet:$DOTNET_VERSION AS run
+# .NET SDK a buildhez
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-COPY --from=build /app/publish .
+
+# Az összes fájl másolása a konténerbe
+COPY . .
+
+# Restore és build
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/out
+
+# .NET runtime a futtatáshoz
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
 
 # Alkalmazás indítása
 ENTRYPOINT ["dotnet", "halak.dll"]
