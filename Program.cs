@@ -6,14 +6,10 @@ using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Betöltjük az appsettings.Production.json-t (Render automatikusan a "Production" környezetben fut)
-builder.Configuration.AddJsonFile("appsettings.Production.json", optional: true, reloadOnChange: true);
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
 builder.Services.AddDbContext<HalakDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
 // Add services to the container.
 
 builder.Services.AddControllers();
