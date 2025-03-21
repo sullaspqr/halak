@@ -4,3 +4,5 @@
 ## IT WONT WORK ON DEFAULT MYSQL PORT!
 Mysql 8.0.35 + default SSL required!
 (synced with render.com)
+
+## CORS POLICY UPDATED!
